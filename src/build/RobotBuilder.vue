@@ -61,10 +61,19 @@ import availableParts from '../data/parts'
 
 export default {
   name: 'RobotBuilder',
+  beforeRouteLeave (to, from, next) {
+    if (this.addedToCart) {
+      next(true)
+    } else {
+      const response = confirm('You have not added your robot to your cart, do you wish to leave?')
+      next(response)
+    }
+  },
   components: { PartSelector, CollapsibleSection },
   data () {
     return {
       availableParts: availableParts,
+      addedToCart: false,
       cart: [],
       selectedRobot: {
         head: {},
@@ -80,6 +89,7 @@ export default {
       const robot = this.selectedRobot
       const cost = robot.head.cost + robot.torso.cost + robot.leftArm.cost + robot.torso.cost + robot.rightArm.cost + robot.base.cost
       this.cart.push(Object.assign({}, robot, { cost }))
+      this.addedToCart = true
     }
   }
 }
