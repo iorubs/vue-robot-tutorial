@@ -11,18 +11,19 @@
       </nav>
     </header>
     <main>
-      <home-page msg="Welcome to Your Vue.js App"/>
+      <build-page/>
     </main>
   </div>
 </template>
 
 <script>
-import HomePage from './components/HomePage.vue'
+// import HomePage from './home/HomePage.vue'
+import BuildPage from './build/RobotBuilder.vue'
 
 export default {
   name: 'app',
   components: {
-    HomePage
+    BuildPage
   }
 }
 </script>
@@ -32,7 +33,9 @@ body {
   background: linear-gradient(to bottom, #555, #999);
   background-attachment: fixed;
 }
+</style>
 
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
 }
