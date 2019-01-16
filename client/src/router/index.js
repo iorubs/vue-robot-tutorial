@@ -11,6 +11,7 @@ import RobotArms from '../parts/RobotArms.vue'
 import RobotTorsos from '../parts/RobotTorsos.vue'
 import RobotBases from '../parts/RobotBases.vue'
 import PartInfo from '../parts/PartInfo.vue'
+import ShoppingCart from '../cart/ShoppingCart.vue'
 
 Vue.use(VueRouter)
 
@@ -59,5 +60,9 @@ export default new VueRouter({
       const isValidId = Number.isInteger(Number(to.params.id))
       next(isValidId)
     }
+  }, {
+    path: '/cart',
+    name: 'Cart',
+    component: ShoppingCart
   }]
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div v-if="availableParts" class="content">
     <div class="preview">
       <collapsible-section>
         <div class="preview-content">
@@ -33,34 +33,19 @@
     <div class="bottom-row">
       <part-selector :parts="availableParts.bases" @partSelected="part => selectedRobot.base=part" position="bottom"/>
     </div>
-    <div>
-      <h1>Cart</h1>
-      <table>
-        <thead>
-          <tr>
-            <th> Robot </th>
-            <th class="cost"> Cost </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(robot, index) in cart" :key="index">
-            <th> {{ robot.head.title }} </th>
-            <th class="cost"> {{ robot.cost }} </th>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import PartSelector from './PartSelector.vue'
 import CollapsibleSection from '../shared/CollapsibleSection.vue'
 
-import availableParts from '../data/parts'
-
 export default {
   name: 'RobotBuilder',
+  created () {
+    this.getParts()
+  },
   beforeRouteLeave (to, from, next) {
     if (this.addedToCart) {
       next(true)
@@ -72,9 +57,7 @@ export default {
   components: { PartSelector, CollapsibleSection },
   data () {
     return {
-      availableParts: availableParts,
       addedToCart: false,
-      cart: [],
       selectedRobot: {
         head: {},
         leftArm: {},
@@ -84,12 +67,21 @@ export default {
       }
     }
   },
+  computed: {
+    availableParts () {
+      return this.$store.state.robots.parts
+    }
+  },
   methods: {
+    ...mapActions('robots', ['getParts', 'addRobotToCart']),
     addToCart () {
       const robot = this.selectedRobot
       const cost = robot.head.cost + robot.torso.cost + robot.leftArm.cost + robot.torso.cost + robot.rightArm.cost + robot.base.cost
-      this.cart.push(Object.assign({}, robot, { cost }))
-      this.addedToCart = true
+      this.addRobotToCart(Object.assign({}, robot, { cost }))
+        .then(() => {
+          this.addedToCart = true
+          this.$router.push('/cart')
+        })
     }
   }
 }
@@ -128,16 +120,6 @@ export default {
   width: 210px;
   padding: 3px;
   font-size: 16px;
-}
-
-td, th {
-  text-align: left;
-  padding: 5px;
-  padding-right: 20px;
-}
-
-.cost {
-  text-align: right;
 }
 
 .preview {
