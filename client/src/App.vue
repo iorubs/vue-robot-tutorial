@@ -14,6 +14,11 @@
               Build
             </router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/parts/browse" exact>
+              Parts
+            </router-link>
+          </li>
           <li class="nav-item cart">
             <router-link class="nav-link" to="/cart" exact>
               Cart
